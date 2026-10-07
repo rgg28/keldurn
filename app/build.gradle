@@ -16,14 +16,21 @@ android {
 
     buildTypes {
         release {
-            // Desactiva el encogido y optimización que vacía el APK
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            // Asegura que la versión debug tampoco borre recursos
             minifyEnabled false
             shrinkResources false
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+
+    // FUERZA AL COMPILADOR A APUNTAR A LA CARPETA MAIN
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            res.srcDirs = ['src/main/res']
+            manifest.srcFile 'src/main/AndroidManifest.xml'
         }
     }
 
