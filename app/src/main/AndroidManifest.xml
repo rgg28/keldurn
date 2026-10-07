@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://android.com">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.keldurn.browser">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -10,7 +11,7 @@
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
         
         <activity
-            android:name=".MainActivity"
+            android:name="com.keldurn.browser.MainActivity"
             android:exported="true"
             android:screenOrientation="landscape"
             android:configChanges="orientation|screenSize|keyboardHidden">
