@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://android.com"
-    package="com.keldurn.browser">
+<manifest xmlns:android="http://android.com">
 
-    <!-- Permiso fundamental para acceder al servidor del juego -->
+    <!-- Permiso fundamental con su clave 'android:name' corregida -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -11,7 +10,7 @@
         android:label="Keldurn Web"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
         
-        <!-- screenOrientation fuerza el modo panorámico y configChanges evita reinicios de la app al girar -->
+        <!-- Actividad principal configurada con sus prefijos mandatorios -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
