@@ -25,17 +25,13 @@ android {
         }
     }
 
-    // FUERZA AL COMPILADOR A APUNTAR A LA CARPETA MAIN
-    sourceSets {
-        main {
-            java.srcDirs = ['src/main/java']
-            res.srcDirs = ['src/main/res']
-            manifest.srcFile 'src/main/AndroidManifest.xml'
-        }
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+}
+
+// AGREGA ESTO AL FINAL DEL ARCHIVO
+dependencies {
+    implementation 'androidx.browser:browser:1.8.0'
 }
