@@ -4,14 +4,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+        // Enlace del compilador compatible con Gradle 8.5
         classpath 'com.android.tools.build:gradle:8.2.2'
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
     }
 }
 
