@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://android.com">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- PERMISOS INDISPENSABLES PARA EL JUEGO ONLINE -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:allowBackup="true"
         android:label="Keldurn Universal"
-        android:icon="@android:drawable/sym_def_app_icon"
-        android:hardwareAccelerated="true"
-        android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-
-        <!-- PARCHE PARA HARDWARE ADRENO 619: Evita cuellos de botella en texturas 3D -->
-        <meta-data android:name="android.graphics.render_thread.disabled" android:value="false"/>
-
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:hardwareAccelerated="true"> <!-- FUERZA EL USO DEL PROCESADOR GRÁFICO (GPU) -->
+        
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="sensorLandscape"
-            android:configChanges="orientation|screenSize|keyboardHidden|keyboard">
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>
