@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(geckoView);
 
         // 6. Cargar el servidor de Keldurn
-        geckoSession.loadUri("https://keldurn.com");
+        geckoSession.loadUri("https://play.keldurn.com");
     }
 
     @Override
