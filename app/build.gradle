@@ -25,11 +25,10 @@ android {
     }
 }
 
-// REPOSITORIOS RECONFIGURADOS
+// CONFIGURACIÓN DE REPOSITORIOS ESTÁNDAR DE ALTA DISPONIBILIDAD
 repositories {
     google()
     mavenCentral()
-    maven { url "https://jitpack.io" } // Servidor alternativo global de alta disponibilidad
 }
 
 dependencies {
@@ -37,6 +36,6 @@ dependencies {
     implementation 'androidx.activity:activity:1.8.2'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     
-    // REEMPLAZO DEFINITIVO: Versión empaquetada universal compatible con compiladores remotos
-    implementation 'com.github.JustKiddingCat:GeckoViewAndroid:115.0'
+    // SOLUCIÓN DEFINITIVA: Distribución oficial de GeckoView para empaquetado directo en aplicaciones nativas
+    implementation 'org.mozilla.geckoview:geckoview-beta:124.0.20240212214436'
 }
