@@ -1,0 +1,38 @@
+name: Construir Keldurn Desde Cero
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: # Permite compilar pulsando un botón desde GitHub
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Clonar el repositorio con tu nuevo código limpio
+    - name: Descargar Código
+      uses: actions/checkout@v4
+
+    # 2. Levantar el entorno de Java oficial (JDK 17)
+    - name: Configurar Java JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+        cache: 'gradle'
+
+    # 3. Autogenerar el sistema de empaquetado Gradle en Linux
+    - name: Inicializar Gradle
+      run: gradle wrapper --gradle-version 8.5
+
+    # 4. Compilar la aplicación limpia aplicando los parámetros de GPU
+    - name: Construir APK Nativa
+      run: ./gradlew assembleDebug --no-daemon
+
+    # 5. Guardar el archivo ejecutable resultante para su descarga
+    - name: Exportar APK Optimizada
+      uses: actions/upload-artifact@v4
+      with:
+        name: Keldurn-Universal-FromScratch
+        path: app/build/outputs/apk/debug/*.apk
