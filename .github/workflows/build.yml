@@ -26,11 +26,11 @@ jobs:
     - name: Inicializar Gradle
       run: gradle wrapper --gradle-version 8.5
 
-    # 4. Compilar la aplicación limpia aplicando los parámetros de GPU
+    # 4. COMPILACIÓN CORREGIDA: Apuntar directamente al submódulo :app
     - name: Construir APK Nativa
-      run: ./gradlew assembleDebug --no-daemon
+      run: ./gradlew :app:assembleDebug --no-daemon
 
-    # 5. Guardar el archivo ejecutable resultante para su descarga
+    # 5. Exportar el archivo ejecutable resultante para su descarga
     - name: Exportar APK Optimizada
       uses: actions/upload-artifact@v4
       with:
