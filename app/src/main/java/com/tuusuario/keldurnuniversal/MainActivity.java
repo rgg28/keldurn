@@ -1,57 +1,52 @@
 package com.tuusuario.keldurnuniversal;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
-import android.view.WindowManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import androidx.appcompat.app.AppCompatActivity;
+import org.mozilla.geckoview.GeckoRuntime;
+import org.mozilla.geckoview.GeckoSession;
+import org.mozilla.geckoview.GeckoSessionSettings;
+import org.mozilla.geckoview.GeckoView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
-    private WebView keldurnView;
+    private GeckoView geckoView;
+    private GeckoSession geckoSession;
+    private GeckoRuntime geckoRuntime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Forzar el comportamiento nativo de pantalla completa y mantenerla encendida
-        getWindow().setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        );
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        // 1. Crear el contenedor de Mozilla directamente desde el código
+        geckoView = new GeckoView(this);
 
-        // Construir e integrar el contenedor Web del juego
-        keldurnView = new WebView(this);
-        setContentView(keldurnView);
+        // 2. Configurar la sesión simulando Google Chrome de PC de escritorio
+        GeckoSessionSettings settings = new GeckoSessionSettings.Builder()
+                .userAgentMode(GeckoSessionSettings.USER_AGENT_MODE_DESKTOP)
+                .userAgentOverride("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+                .build();
 
-        // FORZAR ACELERACIÓN POR HARDWARE DIRECTA (Arreglo crítico para Snapdragon 695)
-        keldurnView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        geckoSession = new GeckoSession(settings);
 
-        // Configurar los parámetros del motor web para WebGL / WebGPU
-        WebSettings settings = keldurnView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);    // Esencial para almacenar la caché del juego
-        settings.setDatabaseEnabled(true);      // Necesario para los índices de mallas 3D
-        settings.setLoadsImagesAutomatically(true);
-        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        // 3. Encender el motor gráfico nativo de Firefox
+        geckoRuntime = GeckoRuntime.create(this);
+        geckoSession.open(geckoRuntime);
 
-        // Prevenir que el juego intente abrirse en el navegador externo del celular
-        keldurnView.setWebViewClient(new WebViewClient());
+        // 4. Asignar la sesión al contenedor
+        geckoView.setSession(geckoSession);
 
-        // Cargar el servidor oficial de Keldurn con los parámetros de hardware forzados
-        keldurnView.loadUrl("https://keldurn.com");
+        // 5. OBLIGATORIO: Establecer GeckoView como la vista principal (reemplaza a setContentView(R.layout...))
+        setContentView(geckoView);
+
+        // 6. Cargar el servidor de Keldurn
+        geckoSession.loadUri("https://keldurn.com");
     }
 
     @Override
-    public void onBackPressed() {
-        // Permitir la navegación interna antes de cerrar la aplicación por error
-        if (keldurnView != null && keldurnView.canGoBack()) {
-            keldurnView.goBack();
-        } else {
-            super.onBackPressed();
+    protected void onDestroy() {
+        if (geckoSession != null) {
+            geckoSession.close();
         }
+        super.onDestroy();
     }
 }
