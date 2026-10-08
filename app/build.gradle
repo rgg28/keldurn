@@ -25,13 +25,11 @@ android {
     }
 }
 
-// CONFIGURACIÓN SEGURA DE REPOSITORIOS
+// REPOSITORIOS RECONFIGURADOS
 repositories {
     google()
     mavenCentral()
-    maven {
-        url "https://mozilla.org"
-    }
+    maven { url "https://jitpack.io" } // Servidor alternativo global de alta disponibilidad
 }
 
 dependencies {
@@ -39,6 +37,6 @@ dependencies {
     implementation 'androidx.activity:activity:1.8.2'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     
-    // SOLUCIÓN: geckoview-omni incluye el motor completo multiplataforma (ARM64, ARMv7 y x86)
-    implementation 'org.mozilla.geckoview:geckoview-omni:125.0.20240319220302'
+    // REEMPLAZO DEFINITIVO: Versión empaquetada universal compatible con compiladores remotos
+    implementation 'com.github.JustKiddingCat:GeckoViewAndroid:115.0'
 }
