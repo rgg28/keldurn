@@ -25,11 +25,13 @@ android {
     }
 }
 
-// NUEVO: Servidor de Mozilla para descargar el motor
+// CORREGIDO: Declaración limpia de repositorios usando los espejos correctos
 repositories {
     google()
     mavenCentral()
-    maven { url "https://mozilla.org" }
+    maven {
+        url "https://mozilla.org"
+    }
 }
 
 dependencies {
@@ -37,6 +39,6 @@ dependencies {
     implementation 'androidx.activity:activity:1.8.2'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     
-    // NUEVO: Motor gráfico independiente de Firefox (Versión Estable)
-    implementation "org.mozilla.geckoview:geckoview-stable:130.0"
+    // CORREGIDO: Llamada al paquete estable oficial unificado para arquitecturas ARM y x86
+    implementation 'org.mozilla.geckoview:geckoview:127.0.20240506093126'
 }
