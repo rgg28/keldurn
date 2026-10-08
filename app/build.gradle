@@ -25,7 +25,7 @@ android {
     }
 }
 
-// CORREGIDO: Declaración limpia de repositorios usando los espejos correctos
+// CONFIGURACIÓN SEGURA DE REPOSITORIOS
 repositories {
     google()
     mavenCentral()
@@ -39,6 +39,6 @@ dependencies {
     implementation 'androidx.activity:activity:1.8.2'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     
-    // CORREGIDO: Llamada al paquete estable oficial unificado para arquitecturas ARM y x86
-    implementation 'org.mozilla.geckoview:geckoview:127.0.20240506093126'
+    // SOLUCIÓN: geckoview-omni incluye el motor completo multiplataforma (ARM64, ARMv7 y x86)
+    implementation 'org.mozilla.geckoview:geckoview-omni:125.0.20240319220302'
 }
