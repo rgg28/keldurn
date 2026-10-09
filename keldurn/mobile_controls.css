@@ -1,0 +1,923 @@
+:root {
+  --keldurn-safe-top: env(safe-area-inset-top, 0px);
+  --keldurn-safe-right: env(safe-area-inset-right, 0px);
+  --keldurn-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --keldurn-safe-left: env(safe-area-inset-left, 0px);
+}
+
+.keldurn-mobile-group {
+  position: absolute; z-index: 4; top: calc(var(--keldurn-safe-top) + 36px);
+  left: calc(var(--keldurn-safe-left) + 140px); right: calc(var(--keldurn-safe-right) + 140px);
+  max-width: 558px; margin: auto; display: grid; grid-template-columns: repeat(6, minmax(44px, 1fr)); gap: 3px;
+}
+.keldurn-mobile-group button {
+  box-sizing: border-box; min-width: 44px; min-height: 48px; padding: 3px;
+  border: 1px solid #887445; border-radius: 6px; pointer-events: auto;
+  background: linear-gradient(to top, #274d39 var(--health, 0%), #151b20 var(--health, 0%));
+  white-space: pre-line; overflow: hidden; overflow-wrap: anywhere; line-height: 1.15 !important;
+}
+.keldurn-mobile-group button[data-selected="true"] { border: 2px solid #ffe795; }
+.keldurn-mobile-group button:disabled { opacity: .4; }
+.keldurn-mobile-group[hidden],
+#keldurn-mobile-controls[data-interface-mode="true"] .keldurn-mobile-group,
+#keldurn-mobile-controls[data-chat-open="true"] .keldurn-mobile-group,
+#keldurn-mobile-controls[data-quick-open="true"] .keldurn-mobile-group { display: none; }
+@media (orientation: portrait) {
+  .keldurn-mobile-group { top: calc(var(--keldurn-safe-top) + 160px);
+    left: calc(var(--keldurn-safe-left) + 12px); right: calc(var(--keldurn-safe-right) + 12px); }
+}
+
+.keldurn-mobile-shortcuts {
+  position: absolute; left: calc(var(--keldurn-safe-left) + 12px);
+  bottom: calc(var(--keldurn-safe-bottom) + 10px); display: flex; gap: 6px;
+}
+.keldurn-mobile-shortcuts button {
+  min-width: 48px; min-height: 48px; padding: 6px; pointer-events: auto;
+  border: 1px solid #b59351; border-radius: 10px; background: #181b20;
+}
+#keldurn-mobile-controls[data-interface-mode="true"] .keldurn-mobile-shortcuts,
+#keldurn-mobile-controls[data-chat-open="true"] .keldurn-mobile-shortcuts { display: none; }
+
+.keldurn-mobile-keyboard {
+  position: absolute; top: calc(var(--keldurn-safe-top) + 64px); left: 14px;
+  min-height: 48px; padding: 0 14px; pointer-events: auto;
+  border: 1px solid #b59351; border-radius: 10px; background: #181b20;
+}
+.keldurn-mobile-editor {
+  position: absolute; z-index: 8; left: max(var(--keldurn-safe-left), 8px);
+  right: max(var(--keldurn-safe-right), 8px);
+  top: calc(var(--keldurn-visual-top, 0px) + var(--keldurn-safe-top) + 8px);
+  max-width: 640px;
+  max-height: calc(var(--keldurn-visual-height, 100dvh) - var(--keldurn-safe-top) - 16px);
+  overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y;
+  margin: auto; padding: 12px; box-sizing: border-box;
+  display: grid; gap: 8px; pointer-events: auto; border: 1px solid #b59351;
+  border-radius: 12px; background: #11151bf5;
+}
+.keldurn-mobile-editor input, .keldurn-mobile-editor textarea {
+  box-sizing: border-box; width: 100%; min-height: 48px; max-height: 28dvh;
+  font: 400 18px/1.3 system-ui, sans-serif; color: #fff4d3; background: #080b10;
+  border: 1px solid #8b7139; border-radius: 6px; padding: 10px;
+  user-select: text; -webkit-user-select: text; touch-action: manipulation;
+}
+.keldurn-mobile-editor textarea { min-height: 80px; resize: vertical; }
+.keldurn-mobile-editor__actions { display: flex; gap: 8px; }
+.keldurn-mobile-editor__actions button {
+  min-height: 48px; flex: 1; border: 1px solid #8b7139; border-radius: 8px;
+  background: #252622;
+}
+.keldurn-mobile-keyboard[hidden], .keldurn-mobile-editor[hidden],
+.keldurn-mobile-editor [hidden] { display: none; }
+#keldurn-mobile-controls[data-chat-open="true"] .keldurn-mobile-keyboard { display: none; }
+#keldurn-mobile-controls[data-text-open="true"] > :not(.keldurn-mobile-editor) { visibility: hidden; }
+
+#keldurn-mobile-controls {
+  position: fixed;
+  box-sizing: border-box;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: none;
+  font: 700 12px/1 system-ui, sans-serif;
+  color: #f4e4b6;
+}
+
+#keldurn-mobile-controls[data-in-world="false"],
+#keldurn-mobile-controls[data-controls-enabled="false"] { display: none; }
+#keldurn-mobile-controls button { font: inherit; color: inherit; }
+
+.keldurn-mobile-chat {
+  position: absolute;
+  top: calc(var(--keldurn-safe-top) + 14px);
+  left: calc(var(--keldurn-safe-left) + 14px);
+  min-width: 58px;
+  min-height: 44px;
+  padding: 0 14px;
+  pointer-events: auto;
+  border: 1px solid rgba(242, 211, 142, .62);
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(67, 75, 84, .86), rgba(12, 17, 23, .94));
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, .62), 0 3px 10px rgba(0, 0, 0, .38);
+  text-shadow: 0 1px 2px #000;
+}
+
+.keldurn-mobile-quick {
+  position: absolute;
+  top: calc(var(--keldurn-safe-top) + 14px);
+  left: calc(var(--keldurn-safe-left) + 82px);
+  pointer-events: none;
+}
+
+.keldurn-mobile-quick__toggle,
+.keldurn-mobile-interface-mode {
+  min-width: 48px;
+  min-height: 44px;
+  pointer-events: auto;
+  border: 1px solid rgba(242, 211, 142, .62);
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(67, 75, 84, .86), rgba(12, 17, 23, .94));
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, .62), 0 3px 10px rgba(0, 0, 0, .38);
+  text-shadow: 0 1px 2px #000;
+}
+
+.keldurn-mobile-quick__toggle { font-size: 19px; }
+
+.keldurn-mobile-quick__panel {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: min(224px, calc(100vw - var(--keldurn-safe-left) - 24px));
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 8px;
+  box-sizing: border-box;
+  pointer-events: auto;
+  border: 1px solid rgba(242, 211, 142, .58);
+  border-radius: 13px;
+  background: rgba(8, 12, 17, .95);
+  box-shadow: 0 5px 22px rgba(0, 0, 0, .62);
+}
+
+.keldurn-mobile-quick__panel[hidden] { display: none; }
+
+.keldurn-mobile-quick__panel button {
+  min-height: 44px;
+  pointer-events: auto;
+  border: 1px solid rgba(224, 193, 122, .45);
+  border-radius: 9px;
+  background: linear-gradient(145deg, rgba(70, 76, 78, .94), rgba(17, 21, 25, .98));
+}
+
+.keldurn-mobile-interface-mode {
+  position: absolute;
+  top: calc(var(--keldurn-safe-top) + 14px);
+  right: calc(var(--keldurn-safe-right) + 14px);
+  padding: 0 12px;
+}
+
+.keldurn-mobile-interface-mode[hidden] { display: none; }
+
+.keldurn-mobile-composer {
+  position: absolute;
+  z-index: 2;
+  top: calc(var(--keldurn-safe-top) + 10px);
+  left: max(calc(var(--keldurn-safe-left) + 10px), calc(50% - 320px));
+  width: min(calc(100% - var(--keldurn-safe-left) - var(--keldurn-safe-right) - 20px), 640px);
+  min-height: 48px;
+  display: flex;
+  gap: 7px;
+  padding: 6px;
+  box-sizing: border-box;
+  pointer-events: auto;
+  border: 1px solid rgba(242, 211, 142, .72);
+  border-radius: 13px;
+  background: rgba(8, 12, 17, .96);
+  box-shadow: 0 5px 22px rgba(0, 0, 0, .62);
+}
+
+.keldurn-mobile-composer[hidden] { display: none; }
+
+.keldurn-mobile-composer input {
+  min-width: 0;
+  flex: 1;
+  padding: 0 12px;
+  color: #fff5d7;
+  caret-color: #ffe09a;
+  font: 500 16px/1.25 system-ui, sans-serif;
+  user-select: text;
+  -webkit-user-select: text;
+  touch-action: manipulation;
+  border: 1px solid rgba(224, 193, 122, .42);
+  border-radius: 8px;
+  outline: none;
+  background: rgba(0, 0, 0, .55);
+}
+
+.keldurn-mobile-composer input:focus { border-color: rgba(255, 224, 154, .92); }
+
+.keldurn-mobile-composer button {
+  min-width: 46px;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 1px solid rgba(242, 211, 142, .58);
+  border-radius: 8px;
+  background: linear-gradient(145deg, rgba(83, 87, 84, .9), rgba(18, 22, 26, .96));
+}
+
+#keldurn-mobile-controls[data-chat-open="true"] .keldurn-mobile-chat,
+#keldurn-mobile-controls[data-chat-open="true"] .keldurn-mobile-quick,
+#keldurn-mobile-controls[data-chat-open="true"] .keldurn-mobile-interface-mode,
+#keldurn-mobile-controls[data-chat-open="true"] .keldurn-mobile-stick,
+#keldurn-mobile-controls[data-chat-open="true"] .keldurn-mobile-right {
+  opacity: .12;
+  pointer-events: none;
+}
+
+#keldurn-mobile-controls[data-interface-mode="true"] .keldurn-mobile-right {
+  opacity: .08;
+  pointer-events: none;
+}
+
+#keldurn-mobile-controls[data-interface-mode="true"] .keldurn-mobile-right * {
+  pointer-events: none;
+}
+
+#keldurn-mobile-controls[data-chat-open="true"] .keldurn-mobile-right * {
+  pointer-events: none;
+}
+
+.keldurn-mobile-stick {
+  position: absolute;
+  left: calc(var(--keldurn-safe-left) + 22px);
+  bottom: calc(var(--keldurn-safe-bottom) + 22px);
+  width: clamp(112px, 25vw, 164px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: auto;
+  background: radial-gradient(circle, rgba(32, 39, 48, .42) 0 48%, rgba(5, 9, 13, .62) 49% 100%);
+  border: 1px solid rgba(224, 193, 122, .42);
+  box-shadow: inset 0 0 22px rgba(0, 0, 0, .7), 0 4px 18px rgba(0, 0, 0, .35);
+}
+
+.keldurn-mobile-stick__ring {
+  position: absolute;
+  inset: 24%;
+  border: 1px solid rgba(245, 219, 158, .25);
+  border-radius: 50%;
+}
+
+.keldurn-mobile-stick__thumb {
+  position: absolute;
+  inset: 32%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, rgba(255, 240, 198, .76), rgba(139, 106, 49, .72));
+  border: 1px solid rgba(255, 230, 172, .72);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .55);
+  will-change: transform;
+}
+
+.keldurn-mobile-right {
+  position: absolute;
+  right: calc(var(--keldurn-safe-right) + 14px);
+  bottom: calc(var(--keldurn-safe-bottom) + 14px);
+  width: min(54vw, 430px);
+  height: min(62vh, 390px);
+}
+
+.keldurn-mobile-look {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: max(120px, calc(100% - 132px));
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+  border: 1px solid rgba(226, 197, 130, .26);
+  border-radius: 28px;
+  background: linear-gradient(145deg, rgba(20, 27, 34, .2), rgba(4, 8, 13, .38));
+  box-shadow: inset 0 0 28px rgba(0, 0, 0, .38);
+  letter-spacing: .16em;
+  color: rgba(246, 226, 177, .28);
+}
+
+.keldurn-mobile-actions {
+  position: absolute;
+  right: 72px;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(3, clamp(46px, 9vw, 62px));
+  gap: 8px;
+}
+
+.keldurn-mobile-action,
+.keldurn-mobile-jump,
+.keldurn-mobile-page {
+  pointer-events: auto;
+  border: 1px solid rgba(242, 211, 142, .62);
+  background: linear-gradient(145deg, rgba(67, 75, 84, .78), rgba(12, 17, 23, .88));
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, .62), 0 3px 10px rgba(0, 0, 0, .38);
+  text-shadow: 0 1px 2px #000;
+}
+
+.keldurn-mobile-action {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  aspect-ratio: 1;
+  border-radius: 13px;
+  font-size: 15px;
+}
+
+.keldurn-mobile-action > span,
+.keldurn-mobile-action > img {
+  position: absolute;
+  pointer-events: none;
+}
+
+.keldurn-mobile-action__icon {
+  inset: 2px;
+  border-radius: 10px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transition: filter 80ms linear;
+}
+
+.keldurn-mobile-action__cooldown {
+  inset: 2px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: conic-gradient(rgba(0, 0, 0, .76) var(--keldurn-cooldown-turn, 0turn), transparent 0);
+  color: #fff;
+  font-size: clamp(12px, 3vw, 17px);
+  text-shadow: 0 1px 3px #000, 0 0 4px #000;
+}
+
+.keldurn-mobile-action__count {
+  z-index: 3;
+  right: 4px;
+  bottom: 3px;
+  color: #fff;
+  font-size: 12px;
+  text-shadow: 0 1px 3px #000, 0 0 3px #000;
+}
+
+.keldurn-mobile-action__slot {
+  z-index: 3;
+  left: 4px;
+  top: 3px;
+  color: rgba(255, 243, 205, .8);
+  font-size: 9px;
+  text-shadow: 0 1px 2px #000;
+}
+
+.keldurn-mobile-action.is-empty .keldurn-mobile-action__slot {
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: rgba(246, 226, 177, .55);
+  font-size: 15px;
+}
+
+.keldurn-mobile-action.is-unusable .keldurn-mobile-action__icon {
+  filter: grayscale(.55) brightness(.45);
+}
+
+.keldurn-mobile-action.is-mana-starved .keldurn-mobile-action__icon {
+  filter: saturate(.55) brightness(.62) sepia(.2) hue-rotate(165deg);
+}
+
+.keldurn-mobile-action.is-out-of-range { border-color: rgba(255, 65, 54, .92); }
+.keldurn-mobile-action.is-current { box-shadow: 0 0 0 2px #ffe79a, 0 0 14px #ffc342; }
+.keldurn-mobile-action.is-equipped { border-color: rgba(78, 235, 112, .9); }
+
+.keldurn-mobile-jump {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  font-size: 25px;
+}
+
+.keldurn-mobile-page {
+  position: absolute;
+  right: 4px;
+  bottom: 72px;
+  width: 54px;
+  min-height: 38px;
+  border-radius: 12px;
+}
+
+.keldurn-mobile-action:active,
+.keldurn-mobile-jump:active,
+.keldurn-mobile-page:active,
+.keldurn-mobile-chat:active,
+.keldurn-mobile-quick button:active,
+.keldurn-mobile-interface-mode:active,
+.keldurn-mobile-composer button:active {
+  filter: brightness(1.35);
+  transform: translateY(1px);
+}
+
+@media (orientation: portrait) {
+  .keldurn-mobile-right { width: 64vw; height: 58vh; }
+  .keldurn-mobile-actions { grid-template-columns: repeat(3, clamp(42px, 11vw, 54px)); }
+}
+
+#keldurn-mobile-controls[data-layout="phone-landscape"] .keldurn-mobile-stick {
+  left: calc(var(--keldurn-safe-left) + 14px);
+  bottom: calc(var(--keldurn-safe-bottom) + 12px);
+  width: clamp(104px, 24vh, 138px);
+}
+
+#keldurn-mobile-controls[data-layout="phone-landscape"] .keldurn-mobile-right {
+  right: calc(var(--keldurn-safe-right) + 10px);
+  bottom: calc(var(--keldurn-safe-bottom) + 10px);
+  width: min(55vw, 390px);
+  height: min(72vh, 300px);
+}
+
+#keldurn-mobile-controls[data-layout="phone-landscape"] .keldurn-mobile-look {
+  height: max(92px, calc(100% - 112px));
+}
+
+#keldurn-mobile-controls[data-layout="phone-landscape"] .keldurn-mobile-actions {
+  right: 62px;
+  grid-template-columns: repeat(3, clamp(42px, 10vh, 52px));
+  gap: 6px;
+}
+
+#keldurn-mobile-controls[data-layout="phone-landscape"] .keldurn-mobile-jump {
+  width: 54px;
+  height: 54px;
+}
+
+#keldurn-mobile-controls[data-layout="phone-landscape"] .keldurn-mobile-page {
+  right: 0;
+  bottom: 62px;
+  width: 50px;
+}
+
+#keldurn-mobile-controls[data-layout="phone-portrait"] .keldurn-mobile-right {
+  width: calc(100vw - var(--keldurn-safe-left) - var(--keldurn-safe-right) - 24px);
+  height: min(48vh, 360px);
+}
+
+#keldurn-mobile-controls[data-layout="phone-portrait"] .keldurn-mobile-look {
+  right: 0;
+  width: 58%;
+}
+
+#keldurn-mobile-controls[data-layout^="tablet"] .keldurn-mobile-stick {
+  width: clamp(138px, 20vw, 184px);
+}
+
+#keldurn-mobile-controls[data-layout^="tablet"] .keldurn-mobile-action {
+  max-width: 66px;
+}
+
+@media (pointer: fine) and (hover: hover) {
+  #keldurn-mobile-controls { opacity: .82; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .keldurn-mobile-action__icon { transition: none; }
+}
+
+/* Touch experience: keep the world open, and place frequent actions under the thumbs. */
+#keldurn-mobile-character-name { display: none; }
+html.keldurn-touch #keldurn-mobile-character-name:not([hidden]) {
+  display: block;
+  position: fixed;
+  z-index: 80;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 58px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(220px, 58vw);
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #c7a35d;
+  border-radius: 7px;
+  background: #101517;
+  color: #f4e4b6;
+  font: 16px system-ui, sans-serif;
+  text-align: center;
+  touch-action: manipulation;
+}
+html.keldurn-touch #keldurn { touch-action: none; height: 100dvh; }
+html.keldurn-touch #bar {
+  /* Touch anchors to the safe edge; desktop drag translations must not move it offscreen. */
+  transform: none !important;
+  top: calc(env(safe-area-inset-top, 0px) + 4px) !important;
+  right: calc(env(safe-area-inset-right, 0px) + 4px) !important;
+  left: auto !important; bottom: auto !important;
+  max-width: min(360px, calc(100vw - 24px));
+  font-size: 11px;
+}
+html.keldurn-touch #bar .player,
+html.keldurn-touch #bar #bar-shop,
+html.keldurn-touch #bar #bar-drag { display: none; }
+#keldurn-mobile-controls {
+  --mobile-gold: #c7a35d;
+  --mobile-ink: rgba(15, 20, 23, .90);
+  --mobile-edge: rgba(213, 181, 114, .55);
+  font-family: system-ui, sans-serif;
+  font-weight: 600;
+}
+.keldurn-mobile-chat,
+.keldurn-mobile-quick,
+.keldurn-mobile-interface-mode {
+  top: auto;
+  bottom: calc(var(--keldurn-safe-bottom) + 14px);
+  z-index: 3;
+}
+.keldurn-mobile-chat { left: calc(50% - 108px); min-width: 58px; }
+.keldurn-mobile-quick { left: calc(50% - 42px); }
+.keldurn-mobile-interface-mode { right: auto; left: calc(50% + 57px); min-width: 66px; }
+.keldurn-mobile-chat,
+.keldurn-mobile-quick__toggle,
+.keldurn-mobile-interface-mode {
+  height: 44px;
+  padding: 0 10px;
+  border: 1px solid var(--mobile-edge);
+  border-radius: 9px;
+  background: linear-gradient(#293031e6, #101517ed);
+  box-shadow: inset 0 1px #f4d99a24, 0 3px 8px #0006;
+  font-size: 11px;
+  letter-spacing: .02em;
+}
+.keldurn-mobile-quick__toggle { font-size: 12px; min-width: 92px; }
+.keldurn-mobile-quick__panel {
+  top: auto;
+  bottom: 54px;
+  left: -90px;
+  width: 270px;
+  grid-template-columns: repeat(2, 1fr);
+  padding: 10px;
+  gap: 8px;
+  background: #11191bf5;
+  border-color: var(--mobile-edge);
+}
+.keldurn-mobile-quick__panel button { min-height: 48px; font-size: 13px; }
+.keldurn-mobile-quick__panel button:last-child { grid-column: 1 / -1; }
+.keldurn-mobile-quick__panel {
+  max-height: calc(100dvh - var(--keldurn-safe-top) - var(--keldurn-safe-bottom) - 120px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+.keldurn-mobile-quick__panel button { touch-action: pan-y; }
+.keldurn-mobile-stop {
+  position: absolute;
+  right: 2px;
+  bottom: 184px;
+  width: 54px;
+  height: 44px;
+  pointer-events: auto;
+  border: 1px solid #d2a76b;
+  border-radius: 9px;
+  background: #241b19ed;
+  font-size: 26px !important;
+}
+#keldurn-mobile-controls[data-layout="phone-portrait"] .keldurn-mobile-stop {
+  right: 0; bottom: 164px; width: 46px;
+}
+.keldurn-mobile-stick {
+  background: radial-gradient(circle, #131c2299 0 43%, #af8e4329 44% 45%, #10161985 46% 68%, #ceb07070 69% 70%, #080c1166 71%);
+  border-color: #d5b57277;
+  box-shadow: inset 0 0 16px #0006, 0 3px 15px #0004;
+}
+.keldurn-mobile-stick__thumb {
+  inset: 33%;
+  background: radial-gradient(circle at 38% 28%, #bca77b, #695a3a 52%, #252d30 54%);
+  border: 1px solid #e4ca8c99;
+  box-shadow: 0 3px 9px #0008, inset 0 1px #ffeab766;
+}
+.keldurn-mobile-right { bottom: calc(var(--keldurn-safe-bottom) + 16px); }
+.keldurn-mobile-look {
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: transparent;
+}
+.keldurn-mobile-actions { right: 68px; bottom: 0; gap: 8px; }
+.keldurn-mobile-action {
+  border: 1px solid #dfbd76c4;
+  border-radius: 12px;
+  background: #101718d9;
+  box-shadow: inset 0 0 0 2px #050808, 0 3px 6px #0008;
+}
+.keldurn-mobile-action__icon { inset: 3px; width: calc(100% - 6px); height: calc(100% - 6px); border-radius: 8px; object-fit: cover; }
+.keldurn-mobile-action.is-empty { border-color: #b19b624f; background: #1017187d; }
+.keldurn-mobile-action.is-empty .keldurn-mobile-action__slot { color: #d0c19c55; font-size: 12px; }
+.keldurn-mobile-target {
+  position: absolute;
+  pointer-events: auto;
+  right: 2px;
+  bottom: 122px;
+  width: 54px;
+  height: 54px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #dfbd7699;
+  border-radius: 50%;
+  background: linear-gradient(#303a3dd9, #0d1519ed);
+  box-shadow: inset 0 1px #f4d99a33, 0 3px 8px #0006;
+}
+.keldurn-mobile-target span { font-size: 25px; line-height: 25px; }
+.keldurn-mobile-target small { font-size: 8px; }
+.keldurn-mobile-page { min-height: 44px; border-radius: 9px; }
+.keldurn-mobile-jump { background: linear-gradient(#41494b, #162024); }
+#keldurn-mobile-controls[data-interface-mode="true"] .keldurn-mobile-stick { visibility: hidden; }
+#keldurn-mobile-controls[data-interface-mode="true"] .keldurn-mobile-right { visibility: hidden; }
+#keldurn-mobile-controls[data-layout="phone-landscape"] .keldurn-mobile-actions {
+  right: 66px;
+  grid-template-columns: repeat(3, clamp(46px, 12vh, 56px));
+  gap: 8px;
+}
+#keldurn-mobile-controls[data-layout="phone-landscape"] .keldurn-mobile-right { width: min(43vw, 350px); }
+#keldurn-mobile-controls[data-layout="phone-landscape"] .keldurn-mobile-look {
+  height: calc(100% - 120px);
+  width: calc(100% - 70px);
+  right: 65px;
+}
+#keldurn-mobile-controls[data-layout="phone-portrait"] .keldurn-mobile-stick {
+  width: 108px;
+  left: calc(var(--keldurn-safe-left) + 12px);
+  bottom: calc(var(--keldurn-safe-bottom) + 86px);
+}
+#keldurn-mobile-controls[data-layout="phone-portrait"] .keldurn-mobile-right {
+  right: calc(var(--keldurn-safe-right) + 10px);
+  bottom: calc(var(--keldurn-safe-bottom) + 80px);
+  width: 220px;
+}
+#keldurn-mobile-controls[data-layout="phone-portrait"] .keldurn-mobile-actions {
+  right: 54px;
+  grid-template-columns: repeat(3, 46px);
+  gap: 5px;
+}
+#keldurn-mobile-controls[data-layout="phone-portrait"] .keldurn-mobile-jump { width: 46px; height: 46px; }
+#keldurn-mobile-controls[data-layout="phone-portrait"] .keldurn-mobile-page { right: 0; bottom: 54px; width: 46px; }
+#keldurn-mobile-controls[data-layout="phone-portrait"] .keldurn-mobile-target { right: 0; bottom: 110px; width: 46px; height: 46px; }
+@media (max-width: 370px) {
+  #keldurn-mobile-controls[data-layout="phone-portrait"] .keldurn-mobile-stick { width: 88px; left: 6px; bottom: 144px; }
+}
+/* Narrow portrait tablets cannot fit the utility row between both thumb docks.
+   Keep the entire 44px touch target above the largest action grid, not merely its centre
+   outside it: on iPad mini, Panels otherwise intercepts the fourth large action. */
+@media (max-width: 820px) {
+  #keldurn-mobile-controls[data-layout="tablet-portrait"] .keldurn-mobile-chat,
+  #keldurn-mobile-controls[data-layout="tablet-portrait"] .keldurn-mobile-quick,
+  #keldurn-mobile-controls[data-layout="tablet-portrait"] .keldurn-mobile-interface-mode {
+    bottom: calc(var(--keldurn-safe-bottom) + 170px);
+  }
+}
+/* Compact landscape has insufficient space for three utility buttons beside six actions.
+   Stack utilities in the gap between both thumbs; the menu stays above the camera hit area. */
+@media (max-width: 740px) and (orientation: landscape) {
+  #keldurn-mobile-controls[data-layout="phone-landscape"] .keldurn-mobile-chat,
+  #keldurn-mobile-controls[data-layout="phone-landscape"] .keldurn-mobile-quick,
+  #keldurn-mobile-controls[data-layout="phone-landscape"] .keldurn-mobile-interface-mode {
+    left: calc(50% - 98px);
+    width: 92px;
+  }
+  #keldurn-mobile-controls[data-layout="phone-landscape"] .keldurn-mobile-chat { bottom: calc(var(--keldurn-safe-bottom) + 118px); }
+  #keldurn-mobile-controls[data-layout="phone-landscape"] .keldurn-mobile-quick { bottom: calc(var(--keldurn-safe-bottom) + 66px); }
+  #keldurn-mobile-controls[data-layout="phone-landscape"] .keldurn-mobile-quick__panel {
+    position: fixed;
+    top: calc(var(--keldurn-safe-top) + 56px);
+    bottom: auto;
+    left: calc(50% - 135px);
+    max-height: calc(100dvh - var(--keldurn-safe-top) - var(--keldurn-safe-bottom) - 64px);
+    overflow-y: auto;
+  }
+}
+
+/* Compact full bar: visible 32px icons keep independent 44px hit targets.
+   All geometry uses the same safe CSS rectangle as the canonical FrameXML HUD. */
+#keldurn-mobile-controls[data-adaptive="true"] {
+  --mobile-bottom: calc(var(--mobile-top) + var(--mobile-height));
+  --mobile-right-edge: calc(var(--mobile-left) + var(--mobile-width));
+  --mobile-utility-left: var(--mobile-left);
+  --mobile-menu-left: var(--mobile-left);
+}
+#keldurn-mobile-controls[data-adaptive="true"] [hidden] { display: none !important; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-stick {
+  left: var(--mobile-left) !important; top: calc(var(--mobile-bottom) - var(--mobile-stick));
+  bottom: auto !important; width: var(--mobile-stick) !important; height: var(--mobile-stick);
+  border: 0; background: transparent; box-shadow: none; z-index: 2;
+}
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-stick__ring { inset: 8px; background: #13221c30; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-stick__thumb { width: 24px; height: 24px; box-shadow: none; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-right {
+  left: calc(var(--mobile-right-edge) - var(--mobile-grid)) !important;
+  top: calc(var(--mobile-bottom) - var(--mobile-dock) - 50px);
+  right: auto !important; bottom: auto !important; width: var(--mobile-grid) !important;
+  height: calc(var(--mobile-dock) + 50px) !important; transform: none !important; z-index: 2;
+}
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-actions {
+  right: 0 !important; bottom: 0;
+  grid-template-columns: repeat(var(--mobile-columns), var(--mobile-action)) !important;
+  gap: var(--mobile-gap) !important;
+}
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-action {
+  width: var(--mobile-action); height: var(--mobile-action); max-width: none;
+  border: 0; border-radius: 5px; background: transparent; box-shadow: none;
+}
+#keldurn-mobile-controls[data-adaptive="true"] :is(.keldurn-mobile-action__icon, .keldurn-mobile-action__cooldown) {
+  inset: 6px; width: calc(100% - 12px); height: calc(100% - 12px); border-radius: 4px;
+}
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-action__cooldown { font-size: 12px; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-action__slot { left: 7px; top: 7px; font-size: 8px; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-action__count { right: 7px; bottom: 6px; font-size: 10px; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-action.is-empty { visibility: hidden; pointer-events: none; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-action.is-current .keldurn-mobile-action__icon { outline: 2px solid #ffe79a; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-action.is-out-of-range .keldurn-mobile-action__icon { outline: 1px solid #ff4136; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-action.is-equipped .keldurn-mobile-action__icon { outline: 1px solid #4eeb70; }
+#keldurn-mobile-controls[data-adaptive="true"] :is(.keldurn-mobile-layer, .keldurn-mobile-target, .keldurn-mobile-jump, .keldurn-mobile-stop) {
+  position: absolute; top: 0; bottom: auto; width: 44px !important; height: 44px !important;
+  min-height: 44px; padding: 0; border: 0; border-radius: 50%; background: transparent;
+  box-shadow: none; text-shadow: 0 1px 3px #000; font-size: 18px; pointer-events: auto; touch-action: none;
+}
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-layer { right: 138px; font-size: 11px; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-target { right: 92px; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-target small { display: none; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-jump { right: 46px; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-stop { right: 0; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-look {
+  position: absolute; left: calc(var(--mobile-left) + var(--mobile-width) * .30);
+  top: calc(var(--mobile-top) + 112px); right: auto;
+  width: calc(var(--mobile-width) * .70); height: max(32px, calc(var(--mobile-height) - 112px)); z-index: 0;
+}
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-shortcuts { display: contents; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-quick {
+  position: absolute; top: calc(var(--mobile-bottom) - max(var(--mobile-stick), var(--mobile-dock)) - 52px - var(--mobile-utility));
+  bottom: auto !important; left: var(--mobile-menu-left) !important;
+  right: auto; width: 44px !important; min-width: 44px; height: 44px; min-height: 44px;
+  margin: 0; padding: 0; box-sizing: border-box; z-index: 4; font-size: 20px;
+  border: 0; border-radius: 50%; background: transparent; box-shadow: none;
+}
+
+/* Account tools belong to the existing utility menu while playing on a phone/tablet.
+   Platform identity keeps desktop touch/compact windows on their existing account UI. */
+:root:is([data-keldurn-mobile-platform="ios"], [data-keldurn-mobile-platform="android"]):has(
+  #keldurn-mobile-controls[data-in-world="true"][data-controls-enabled="true"][data-quick-open="false"]
+) #bar {
+  display: none;
+}
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-quick__toggle {
+  width: 44px; min-width: 44px; padding: 0; border: 0; border-radius: 50%; background: transparent; box-shadow: none; text-shadow: 0 1px 3px #000;
+}
+#keldurn-mobile-controls[data-adaptive="true"] :is(.keldurn-mobile-quick__toggle, .keldurn-mobile-layer, .keldurn-mobile-target, .keldurn-mobile-jump, .keldurn-mobile-stop):is(:active, :focus-visible) { background: #101d1877; }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-interface-mode { display: none; }
+#keldurn-mobile-controls[data-adaptive="true"][data-panel-open="true"] :is(.keldurn-mobile-quick, .keldurn-mobile-interface-mode) { display: none !important; }
+#keldurn-mobile-controls[data-adaptive="true"][data-interface-mode="true"] .keldurn-mobile-interface-mode {
+  display: block; left: calc(var(--mobile-right-edge) - 88px); top: calc(var(--mobile-bottom) - 44px);
+  bottom: auto; width: 88px; height: 44px;
+}
+#keldurn-mobile-controls[data-adaptive="true"][data-interface-mode="true"] :is(.keldurn-mobile-chat, .keldurn-mobile-quick, [data-mobile-shortcut]) { top: calc(var(--mobile-bottom) - 44px); }
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-quick__panel {
+  position: fixed; left: calc(var(--mobile-left) + (var(--mobile-width) - min(300px, var(--mobile-width))) * .5);
+  top: var(--mobile-top); bottom: auto; width: min(300px, var(--mobile-width));
+  box-sizing: border-box; max-height: calc(var(--mobile-height) - 52px); overflow-y: auto;
+}
+#keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-interact {
+  position: absolute; pointer-events: auto; z-index: 4; left: var(--mobile-utility-left);
+  top: calc(var(--mobile-bottom) - max(var(--mobile-stick), var(--mobile-dock)) - 102px - var(--mobile-utility));
+  width: 136px; height: 44px; padding: 0 6px; border: 0; border-radius: 10px;
+  background: #101d1899; font: 500 11px/15px system-ui; white-space: pre; overflow: hidden; touch-action: none;
+}
+#keldurn-mobile-controls[data-adaptive="true"]:is([data-interface-mode="true"], [data-chat-open="true"], [data-quick-open="true"]) :is(.keldurn-mobile-look, .keldurn-mobile-interact) { visibility: hidden; }
+#keldurn-mobile-controls[data-chat-open="true"] .keldurn-mobile-shortcuts { display: none !important; }
+html[data-keldurn-right-movement="true"] #keldurn-mobile-controls[data-adaptive="true"] {
+  --mobile-utility-left: calc(var(--mobile-right-edge) - 136px);
+  --mobile-menu-left: calc(var(--mobile-right-edge) - 44px);
+}
+html[data-keldurn-right-movement="true"] #keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-stick { left: calc(var(--mobile-right-edge) - var(--mobile-stick)) !important; }
+html[data-keldurn-right-movement="true"] #keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-right { left: var(--mobile-left) !important; }
+html[data-keldurn-right-movement="true"] #keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-right :is(button, .keldurn-mobile-actions) { transform: none !important; }
+html[data-keldurn-right-movement="true"] #keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-look { left: var(--mobile-left); }
+html[data-keldurn-right-movement="true"] #keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-layer { right: auto; left: 0px; }
+html[data-keldurn-right-movement="true"] #keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-target { right: auto; left: 46px; }
+html[data-keldurn-right-movement="true"] #keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-jump { right: auto; left: 92px; }
+html[data-keldurn-right-movement="true"] #keldurn-mobile-controls[data-adaptive="true"] .keldurn-mobile-stop { right: auto; left: 138px; }
+
+/* Safari's toolbar can leave less than 250 CSS pixels. Put utilities beside the
+   movement thumb so they cannot cover the unit frames or escape above the viewport. */
+#keldurn-mobile-controls[data-adaptive="true"][data-short-landscape="true"] {
+  --mobile-utility-left: calc(var(--mobile-left) + var(--mobile-stick) + 8px);
+  --mobile-menu-left: var(--mobile-utility-left);
+}
+html[data-keldurn-right-movement="true"] #keldurn-mobile-controls[data-adaptive="true"][data-short-landscape="true"] {
+  --mobile-utility-left: calc(var(--mobile-right-edge) - var(--mobile-stick) - 96px);
+  --mobile-menu-left: calc(var(--mobile-right-edge) - var(--mobile-stick) - 52px);
+}
+#keldurn-mobile-controls[data-adaptive="true"][data-short-landscape="true"] .keldurn-mobile-quick {
+  top: calc(var(--mobile-bottom) - 44px);
+}
+#keldurn-mobile-controls[data-adaptive="true"][data-short-landscape="true"] .keldurn-mobile-interact {
+  top: calc(var(--mobile-bottom) - 92px); width: 88px;
+}
+
+/* Phone landscape: the App Store MMO fan (actionArcLayout). The layout pass writes each control's
+   viewport box as --x/--y/--s; state classes (cooldown, range, mana) keep their canonical rules. */
+#keldurn-mobile-controls[data-hud="arc"] .keldurn-mobile-right { pointer-events: none !important; }
+#keldurn-mobile-controls[data-hud="arc"] .keldurn-mobile-actions { display: contents !important; }
+#keldurn-mobile-controls[data-hud="arc"] :is(.keldurn-mobile-action, .keldurn-mobile-page, .keldurn-mobile-jump, .keldurn-mobile-target, .keldurn-mobile-stop)[data-arc] {
+  position: fixed !important; left: var(--x) !important; top: var(--y) !important;
+  right: auto !important; bottom: auto !important; width: var(--s) !important; height: var(--s) !important;
+  min-width: 0 !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important;
+  border-radius: 50% !important; transform: none !important; z-index: 3; pointer-events: auto;
+  -webkit-tap-highlight-color: transparent; touch-action: none;
+}
+#keldurn-mobile-controls[data-hud="arc"] .keldurn-mobile-action[data-arc="off"],
+#keldurn-mobile-controls[data-hud="arc"] :is(.keldurn-mobile-layer, .keldurn-mobile-shift) { display: none !important; }
+#keldurn-mobile-controls[data-hud="arc"] .keldurn-mobile-action[data-arc] {
+  overflow: hidden; background: radial-gradient(circle at 50% 30%, #1d2522ec, #060908f5) !important;
+  border: 2px solid #b8955080 !important; box-shadow: 0 2px 10px #000c !important;
+}
+#keldurn-mobile-controls[data-hud="arc"] .keldurn-mobile-action[data-arc="primary"] {
+  border: 3px solid #e3bd66d0 !important; box-shadow: 0 0 0 2px #000a, 0 4px 16px #000d !important;
+}
+#keldurn-mobile-controls[data-hud="arc"] .keldurn-mobile-action[data-arc] :is(.keldurn-mobile-action__icon, .keldurn-mobile-action__cooldown) {
+  inset: 3px !important; width: calc(100% - 6px) !important; height: calc(100% - 6px) !important;
+  border-radius: 50% !important; outline-offset: -2px;
+}
+#keldurn-mobile-controls[data-hud="arc"] .keldurn-mobile-action[data-arc] .keldurn-mobile-action__cooldown { font-size: calc(var(--s) * .3) !important; }
+#keldurn-mobile-controls[data-hud="arc"] .keldurn-mobile-action[data-arc] .keldurn-mobile-action__slot { display: none; }
+#keldurn-mobile-controls[data-hud="arc"] .keldurn-mobile-action[data-arc] .keldurn-mobile-action__count {
+  right: 18% !important; bottom: 12% !important; font-size: calc(var(--s) * .22) !important;
+}
+/* Empty fan slots keep a faint ring so the fan never changes shape as a spellbook grows. */
+#keldurn-mobile-controls[data-hud="arc"] .keldurn-mobile-action.is-empty[data-arc] {
+  visibility: visible !important; pointer-events: none; opacity: .32;
+}
+#keldurn-mobile-controls[data-hud="arc"] :is(.keldurn-mobile-page, .keldurn-mobile-jump, .keldurn-mobile-target, .keldurn-mobile-stop)[data-arc] {
+  display: grid; place-items: center; background: #0a0e0dd0 !important; border: 1px solid #c9a55a70 !important;
+  color: #f2e2b6; font: 700 calc(var(--s) * .42)/1 system-ui, sans-serif !important; text-shadow: 0 1px 2px #000;
+}
+#keldurn-mobile-controls[data-hud="arc"] .keldurn-mobile-page[data-arc] { font-size: calc(var(--s) * .3) !important; }
+#keldurn-mobile-controls[data-hud="arc"] .keldurn-mobile-target small { display: none; }
+#keldurn-mobile-controls[data-hud="arc"] [data-arc]:active { filter: brightness(1.45); }
+
+/* Floating stick: the lower-left third is a movement surface; the ring follows the thumb. */
+#keldurn-mobile-controls .keldurn-mobile-stick-zone { display: none; }
+#keldurn-mobile-controls[data-hud="arc"] .keldurn-mobile-stick-zone {
+  display: block; position: fixed; z-index: 1; touch-action: none; pointer-events: auto;
+  left: var(--mobile-left); top: calc(var(--mobile-top) + var(--mobile-height) * .36);
+  width: calc(var(--mobile-width) * .30); height: calc(var(--mobile-height) * .64);
+}
+#keldurn-mobile-controls[data-hud="arc"] .keldurn-mobile-stick { opacity: .5; transition: opacity .12s; }
+#keldurn-mobile-controls[data-hud="arc"] .keldurn-mobile-stick[data-floating="true"] { opacity: 1; transition: none; }
+
+/* First-play lesson on the fan layout: two labelled hints over the movement and look surfaces.
+   Only its button takes touches; everything else passes through to the controls beneath. */
+#keldurn-mobile-controls .keldurn-mobile-coach[hidden] { display: none !important; }
+#keldurn-mobile-controls .keldurn-mobile-coach { position: fixed; inset: 0; z-index: 6; pointer-events: none; }
+#keldurn-mobile-controls .keldurn-mobile-coach > div {
+  position: fixed; display: grid; justify-items: center; gap: 8px; transition: opacity .3s;
+  color: #f7e7bd; font: 700 14px/1.2 system-ui, sans-serif; text-shadow: 0 1px 3px #000, 0 0 10px #000;
+}
+#keldurn-mobile-controls .keldurn-mobile-coach b {
+  padding: 6px 10px; border-radius: 14px; background: #060908cc; border: 1px solid #d8b35f66; white-space: nowrap;
+}
+/* Clear of the menu button at the left edge, which sits just above the stick. */
+#keldurn-mobile-controls .keldurn-mobile-coach__move {
+  left: calc(var(--mobile-left) + max(var(--mobile-width) * .15, 160px)); top: calc(var(--mobile-top) + var(--mobile-height) * .72);
+  transform: translate(-50%, -50%);
+}
+#keldurn-mobile-controls .keldurn-mobile-coach__look {
+  left: calc(var(--mobile-left) + var(--mobile-width) * .58); top: calc(var(--mobile-top) + var(--mobile-height) * .40);
+  transform: translate(-50%, -50%);
+}
+#keldurn-mobile-controls .keldurn-mobile-coach i {
+  display: block; width: 46px; height: 46px; border-radius: 50%;
+  border: 3px solid #f2d27ccc; background: #f2d27c22;
+}
+#keldurn-mobile-controls .keldurn-mobile-coach__move i { animation: keldurn-coach-pulse 1.4s ease-in-out infinite; }
+#keldurn-mobile-controls .keldurn-mobile-coach__look i { animation: keldurn-coach-swipe 1.8s ease-in-out infinite; }
+#keldurn-mobile-controls .keldurn-mobile-coach[data-moved="true"] .keldurn-mobile-coach__move,
+#keldurn-mobile-controls .keldurn-mobile-coach[data-looked="true"] .keldurn-mobile-coach__look { opacity: 0; }
+#keldurn-mobile-controls .keldurn-mobile-coach button {
+  position: fixed; pointer-events: auto; left: 50%; top: calc(var(--mobile-top) + 6px); transform: translateX(-50%);
+  min-height: 40px; padding: 0 18px; border-radius: 20px; border: 1px solid #d8b35f99;
+  background: #0b100ee6; color: #f7e7bd; font: 700 14px system-ui, sans-serif;
+}
+@keyframes keldurn-coach-pulse { 0%, 100% { transform: scale(.85); opacity: .7; } 50% { transform: scale(1.15); opacity: 1; } }
+@keyframes keldurn-coach-swipe { 0%, 100% { transform: translateX(-38px); } 50% { transform: translateX(38px); } }
+@media (prefers-reduced-motion: reduce) {
+  #keldurn-mobile-controls .keldurn-mobile-coach i { animation: none; }
+}
+
+/* Portrait phones get a gentle, non-blocking nudge: the game is built for landscape. */
+#keldurn-mobile-controls .keldurn-mobile-rotate { display: none; }
+#keldurn-mobile-controls[data-layout="phone-portrait"][data-in-world="true"] .keldurn-mobile-rotate {
+  display: block; position: fixed; left: 50%; top: calc(var(--mobile-top) + 4px); transform: translateX(-50%);
+  z-index: 5; pointer-events: none; padding: 6px 12px; border-radius: 14px; background: #060908d9;
+  border: 1px solid #d8b35f66; color: #f7e7bd; font: 700 13px system-ui, sans-serif; white-space: nowrap;
+}
+
+/* Resurrection/release/healer confirmations keep the dock visible. Camera gestures yield
+   to the game's own popup buttons; death and ghost state never choose the HUD mode. */
+#keldurn-mobile-controls[data-confirmation-open="true"] .keldurn-mobile-look {
+  visibility: hidden;
+  pointer-events: none;
+}
+/* Visible dock controls must not intercept a confirmation button on a short viewport. */
+#keldurn-mobile-controls[data-confirmation-open="true"],
+#keldurn-mobile-controls[data-confirmation-open="true"] * {
+  pointer-events: none !important;
+}
