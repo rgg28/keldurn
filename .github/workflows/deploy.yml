@@ -1,0 +1,48 @@
+name: Empaquetar Clon Frontend Optimizado
+
+on:
+  push:
+    branches:
+      - main  # Se ejecuta automáticamente cada vez que subes cambios a la rama principal
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código fuente
+        uses: actions/checkout@v4
+
+      - name: Estructurar Carpetas y Arquitectura Móvil
+        run: |
+          echo "Organizando archivos dentro del servidor de GitHub..."
+          mkdir -p mobile
+          # Si los archivos app.js o platform.js están sueltos en la raíz, los mueve automáticamente a /mobile
+          [ -f app.js ] && mv app.js mobile/app.js || true
+          [ -f platform.js ] && mv platform.js mobile/platform.js || true
+          echo "Estructura de carpetas completada."
+
+      - name: Generar Paquete ZIP de Descarga 📦
+        uses: actions/upload-artifact@v4
+        with:
+          name: Keldurn_Frontend_Modificado
+          path: |
+            index.html
+            client_capabilities.js
+            modifier_release.js
+            keldurn_bg.js
+            performance_hints.js
+            asset_cache.js
+            asset_recovery.js
+            audio_diagnostics.js
+            cache_telemetry.js
+            compute_worker.js
+            game_keys.js
+            hitch_recorder.js
+            network_route.js
+            questie_boot.js
+            relay_resume.js
+            script_diagnostics.js
+            startup_cache.js
+            wasi_stubs.js
+            cursor.png
+            mobile/
